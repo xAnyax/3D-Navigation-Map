@@ -9,6 +9,7 @@ let moveLeft = false;
 let moveRight = false;
 let canJump = false;
 let raycaster;
+let isCanvasShow = true;
 
 const velocity = new THREE.Vector3(); // moving speed
 const direction = new THREE.Vector3(); // moving direction
@@ -28,10 +29,9 @@ camera.lookAt(scene.position);
 // Load 3D model
 function init(){
     const loader = new GLTFLoader().setPath('test/');
-    loader.load('scene.gltf', function(gltf) {
-        console.log(gltf);
+    loader.load('floor.gltf', function(gltf) {
         const mesh = gltf.scene;
-        mesh.position.set(0,1.05,-1);
+        mesh.position.set(40,15,0);
         scene.add(mesh);
         const ambientLight = new THREE.AmbientLight(0x404040);
         scene.add(ambientLight);
@@ -39,16 +39,17 @@ function init(){
         pointLight.position.set(0,50,0);
         scene.add(pointLight);
     } );
-    document.getElementById('3d-container').appendChild(renderer.domElement);
+    document.getElementById("mapcontainer").appendChild(renderer.domElement);
+    PLControls();
 }
 
 // Controller 
 function PLControls(){
-    controls = new PointerLockControls(camera, document.getElementById('3d-container'));
-    controls.getObject().position.set(0, 0, 0);
+    controls = new PointerLockControls(camera, document.getElementById('mapcontainer'));
+    controls.getObject().position.set(100, 30, -21);
     scene.add(controls.getObject());
     
-    const threeDContainer = document.getElementById('3d-container');
+    const threeDContainer = document.getElementById('mapcontainer');
     const blocker = document.getElementById('blocker'); // bug
     const instructions = document.getElementById('instructions');
     
@@ -171,12 +172,35 @@ function render() {
     renderer.render(scene, camera);
 };
 
+document.addEventListener("DOMContentLoaded", function(){
+    function switchmap() {
+        document.getElementById("switchmap").addEventListener("click", function(){
+            if (isCanvasShow) {
+                const canvas = document.querySelector('canvas');
+                canvas.parentNode.removeChild(canvas);
+                init();
+                render();
+                isCanvasShow = false;
+            } else {
+                const scene3D = document.getElementById('mapcontainer');
+                while (scene3D.firstChild) {
+                    scene3D.removeChild(scene3D.firstChild);
+                }
+                const newCanvas = document.createElement('canvas');
+                newCanvas.width = window.innerWidth;
+                newCanvas.height = window.innerHeight;
+                scene3D.appendChild(newCanvas);
+                setup();
+                isCanvasShow = true;
+            }
+        });
+    }
+    switchmap();
+})
+
 // Resize window
 window.addEventListener('resize', function() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 })
-init();
-PLControls();
-render();
