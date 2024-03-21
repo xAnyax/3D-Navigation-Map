@@ -299,12 +299,14 @@ function draw() { // if will self-loopping automatically by the p5.js
 
 // zoomin and out 
 function zoomin(){
+  scale = 1;
   scale *= 1.05;
   canvasWidth *= scale;
   canvasHeight *= scale;
   resizeCanvas(canvasWidth, canvasHeight);
 };
 function zoomout(){
+  scale = 1;
   scale *= 0.95;
   canvasWidth *= scale;
   canvasHeight *= scale;

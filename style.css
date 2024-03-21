@@ -106,13 +106,15 @@ canvas {
 #floor5 {
     padding: 2px;
     padding-bottom: 5px;
+    padding-top: 8px;
+    display: flex;
 }
 
 #floor5 button {
-    background-color: #555;
-    border-radius: 100px;
-    color: white;
+    background-size: cover;
     cursor: pointer;
+    width: 38px;
+    height: 38px;
 }
 
 #floor6 {
@@ -121,14 +123,15 @@ canvas {
 }
 
 #floor6 button {
-    color: white;
-    background-color: #555;
-    border-radius: 100px;
+    background-size: cover;
     cursor: pointer;
+    width: 38px;
+    height: 38px;
 }
 
 #floor {
     border-bottom: 1px solid black;
+    padding: 3px;
 }
 
 #twodmapcontainer{
@@ -158,4 +161,8 @@ canvas {
     right: 5px;
     position: absolute;
     border-radius: 50px;
+}
+
+#legendword{
+    padding-bottom: 30px;
 }
