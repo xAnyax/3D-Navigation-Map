@@ -4,7 +4,7 @@ import { PointerLockControls } from 'three/addons/controls/PointerLockControls.j
 
 var clock = new THREE.Clock();
 
-const threeDContainer = document.getElementById('threedcontainer');
+const threeDContainer = document.getElementById('threedmodel');
 
 var moveForward = false;
 var moveBackward = false;
@@ -16,7 +16,6 @@ var moveDown = false;
 // var canJump = false;
 // var spaceUp = true;
 // var moveUpSpeed = 100;
-let isCanvasShow = true;
 
 var velocity = new THREE.Vector3(); // moving speed
 // var direction = new THREE.Vector3(); // moving direction
@@ -76,7 +75,7 @@ function init(){
 	function ( error ) {
 		console.log( 'An error happened' );
 	} );
-    document.getElementById("threedcontainer").appendChild(renderer.domElement);
+    document.getElementById("threedmodel").appendChild(renderer.domElement);
     PLControls();
 }
 
@@ -192,15 +191,17 @@ function render() {
     renderer.render(scene, camera);
 };
 
-document.addEventListener("DOMContentLoaded", function(){ // cover canvas
+document.addEventListener("DOMContentLoaded", function(){
     function switchmap() {
         document.getElementById("switchmap").addEventListener("click", function(){
-                init();
-                render();
+            document.getElementById("threedcontainer").style.visibility = 'visible'
+            init();
+            render();
         });
     }
     function switchtwod() {
         document.getElementById("switch2d").addEventListener("click", function(){
+            document.getElementById("threedcontainer").style.visibility = 'hidden';
         });
     }
     switchmap();

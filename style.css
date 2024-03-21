@@ -4,6 +4,10 @@
     overflow: hidden;
 }
 
+button {
+    cursor: pointer;
+}
+
 .header {
     text-align: center;
     font: 25px bolder;
@@ -87,7 +91,6 @@
 
 canvas {
     overflow-clip-margin: content-box;
-    border: 1px solid black;
 }
 
 #floorcontainer {
@@ -109,6 +112,7 @@ canvas {
     background-color: #555;
     border-radius: 100px;
     color: white;
+    cursor: pointer;
 }
 
 #floor6 {
@@ -120,6 +124,7 @@ canvas {
     color: white;
     background-color: #555;
     border-radius: 100px;
+    cursor: pointer;
 }
 
 #floor {
@@ -132,7 +137,7 @@ canvas {
 
 #threedcontainer{
     position: absolute;
-    top: 52px;
+    top: 48px;
     left: 350px;
     width: 82%;
 }
@@ -142,7 +147,7 @@ canvas {
     top: 60px;
     right: 5px;
     border: 1px solid black;
-    width: 280px;
+    width: 250px;
     height: 370px;
 }
 
@@ -150,7 +155,7 @@ canvas {
     background-size: cover;
     width: 30px;
     height: 30px;
-    right: 1px;
+    right: 5px;
     position: absolute;
     border-radius: 50px;
 }

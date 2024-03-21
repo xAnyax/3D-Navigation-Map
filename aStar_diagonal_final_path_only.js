@@ -1,4 +1,4 @@
-var scale = 1;
+let scale = 1;
 let canvasWidth = 500;
 let canvasHeight = 900;
 var cols = 57; // number of colums of the grid
@@ -14,9 +14,9 @@ var img5f;
 var img6f
 var five = true;
 var fiveFroomSet = {"501":[27, 56], "502":[40, 66], "503":[40, 47]
-                    , "504":[40, 39], "505":[46, 32], "506":[36, 32]
-                    , "507":[23, 32], "508":[16, 12], "509":[16, 21]
-                    , "510":[16, 30], "escalator":[24, 36]
+                  , "504":[40, 39], "505":[46, 32], "506":[36, 32]
+                  , "507":[23, 32], "508":[16, 12], "509":[16, 21]
+                  , "510":[16, 30], "escalator":[24, 36]
                   };
 
 var sixFroomSet = {"601":[27, 56], "602":[40, 66], "603":[40, 47]
@@ -121,6 +121,8 @@ function setup() {
 }
 
 function reset(){
+  w = width / cols;
+  h = height / rows;
   openSet = []; // an array contains all node that we will visit
   closedSet = []; // an array contains all node that we have visited
   path = [];
@@ -262,11 +264,11 @@ function draw() { // if will self-loopping automatically by the p5.js
   image(current_f,0,0,width,height);
   
   // showing grid
-  // for (var i = 0; i < cols; i++) {
-  //   for (var j = 0; j < rows; j++) {
-  //     grid[i][j].show_grid(color(0));
-  //   }
-  // }
+  for (var i = 0; i < cols; i++) {
+     for (var j = 0; j < rows; j++) {
+       grid[i][j].show_grid(color(0));
+     }
+   }
   
   path = [];
   var temp = current;
@@ -296,11 +298,25 @@ function draw() { // if will self-loopping automatically by the p5.js
 }
 
 // zoomin and out 
-function zoomIn(){
-  scale *= 1.1;
-  resizeCanvas(canvasWidth * scale, canvasHeight * scale, true);
-}
-function zoomOut(){
-  scale /= 0.9;
-  resizeCanvas(canvasWidth * scale, canvasHeight * scale, true);
+function zoomin(){
+  scale *= 1.05;
+  canvasWidth *= scale;
+  canvasHeight *= scale;
+  resizeCanvas(canvasWidth, canvasHeight);
+};
+function zoomout(){
+  scale *= 0.95;
+  canvasWidth *= scale;
+  canvasHeight *= scale;
+  resizeCanvas(canvasWidth, canvasHeight);
+};
+
+function minimap(){
+  var miniCanvas = createCanvas(300,600);
+  current_f = img5f;
+  current_floor = "img5f"
+
+  var minimapContainer = document.getElementById('minimap');
+  miniCanvas.parent(minimapContainer);
+  noLoop();
 }
