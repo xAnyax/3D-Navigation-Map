@@ -21,14 +21,18 @@
     <body style="cursor: auto;" onload="run()">
         <noscript>Enable JavaScript to run this program.</noscript>
 
-        <div class="header">3D model Navigation Map</div>
+        <div class="header">HKU SPACE 3D model Navigation Map</div>
         <div class="navbar"></div>
         <div class="container">
           <div class="sidebar">
               <div class="search">
-                Search
-                <br><label id="selector_label_start" for="start">From:</label>
-                <br><select id="start" name="start">
+                <div id="searchword">
+                  Search Path
+                </div>
+                <br>From:
+                <br><input id='start_input' name="start" list="startIn" value="601"> 
+                <label id="selector_label_start" for="startIn"></label>
+                <br><datalist id="startIn">
                   <option value="501">501</option>
                   <option value="502">502</option>
                   <option value="503">503</option>
@@ -39,9 +43,16 @@
                   <option value="508">508</option>
                   <option value="509">509</option>
                   <option value="510">510</option>
-                </select>
-                <br><label id="selector_label_end" for="end">To:</label>
-                <br><select id="end" name="end">
+                  <option value="601">601</option>
+                  <option value="602">602</option>
+                  <option value="escalator">escalator</option>
+                  <!-- <option value="floor6">floor6</option> -->
+                </datalist>
+
+                <br>To:
+                <br><input id='end_input' name="end" list="endIn" value="602"> 
+                <br><label id="selector_label_end" for="end"></label>
+                <br><datalist id="endIn" name="end">
                   <option value="501">501</option>
                   <option value="502">502</option>
                   <option value="503">503</option>
@@ -52,17 +63,50 @@
                   <option value="508">508</option>
                   <option value="509">509</option>
                   <option value="510">510</option>
-                </select>
+                  <option value="601">601</option>
+                  <option value="602">602</option>
+                  <option value="escalator">escalator</option>
+                  
+                </datalist>
                 <br><button id="run" onclick=run()>Start</button>
               </div>
-              <div class="legends"></div>
-          </div>
-          <div id="mapcontainer">
-              <div id="blocker">
-                <div id="instructions"></div>
+              <div class="legends">
+                <div id="legendword">
+                  Legends
+                </div>
               </div>
-            <button id="switchmap" type="button"> //img
-            </button>
+          </div>
+
+          <div id="mapcontainer">
+            <div id="twodmapcontainer">
+              <div id="floorcontainer">
+                <div id="floor">
+                  Floor
+                </div>
+                <div id="floor5">
+                  <button id="map_5f">5/F</button>
+                </div>
+                <div id="floor6">
+                  <button id="map_6f">6/F</button>
+                </div>
+              </div>
+              <div id="btncontainer">
+                <div id="zoominbtn">
+                  <button id="zoomin" type="button" onclick="zoomIn()" style="background-image: url(pics/zoomin.png);"></button>
+                </div>
+                <div id="zoomoutbtn">
+                  <button id="zoomout" type="button" onclick="zoomOut()" style="background-image: url(pics/zoomout.png);"></button>
+                </div>
+                <div id="switchbtn">
+                  <button id="switchmap" type="button" style="background-image: url(pics/3D.png);"></button>
+                </div>
+              </div>
+            </div>
+            <div id="threedcontainer">
+              <div id="minimap">
+                <button id="switch2d" type="button"></button>
+              </div>
+            </div>
           </div>
         </div>
         <script src="Node.js"></script>
