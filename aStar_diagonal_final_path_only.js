@@ -31,6 +31,7 @@ var current_floor;
 var current_f
 var startIn;
 var endIn;
+var autoturn = false; 
 
 function preload(){
   img5f = loadImage('5floor_done_75.png');
@@ -39,26 +40,30 @@ function preload(){
 }
 
 function run(){
+  autoturn = true;
   reset();
   loop();
 }
 
-// change to 5floor 2d map
+// change to 5floor 2d map and find the path
 function turn5f(){
   current_floor = "img5f";
   current_f = img5f
+  autoturn = false;
   image(current_f,0,0,width,height);
   reset();
-  redraw();
+  loop();
+
 }
 
-// change to 6floor 2d map
+// change to 6floor 2d map and find the path
 function turn6f(){
   current_floor = "img6f";
   current_f = img6f
+  autoturn = false;
   image(current_f,0,0,width,height);
   reset();
-  redraw();
+  loop();
 }
 
 function removeFromArray(arr, elt) {
@@ -121,8 +126,6 @@ function setup() {
 }
 
 function reset(){
-  w = width / cols;
-  h = height / rows;
   openSet = []; // an array contains all node that we will visit
   closedSet = []; // an array contains all node that we have visited
   path = [];
@@ -155,10 +158,14 @@ function reset(){
 
   if ((startIn in fiveFroomSet || startIn in sixFroomSet) && (endIn in fiveFroomSet || endIn in sixFroomSet)){ // check the input value
     if (current_floor == "img5f"){ // user stay on 5F
+
       if (startIn in sixFroomSet && endIn in sixFroomSet) { // 6xx to 6xx
-        // still need to do
         selectStartIndex = fiveFroomSet["escalator"]; 
         selectEndIndex = fiveFroomSet["escalator"];
+
+        if (autoturn){
+          turn6f();
+        }
 
       }else if (endIn in sixFroomSet){ // 5xx to 6xx
         selectStartIndex = fiveFroomSet[startIn]; 
@@ -168,6 +175,10 @@ function reset(){
         selectStartIndex = fiveFroomSet["escalator"]; 
         selectEndIndex = fiveFroomSet[endIn];
 
+        if (autoturn){
+          turn6f();
+        }
+
       }else{ // 5xx to 5xx
         selectStartIndex = fiveFroomSet[startIn]; 
         selectEndIndex = fiveFroomSet[endIn];
@@ -175,9 +186,12 @@ function reset(){
       }
     }else if (current_floor =="img6f"){ // user stay on 6F
       if (startIn in fiveFroomSet && endIn in fiveFroomSet){ // 5xx to 5xx
-        // still need to do
         selectStartIndex = sixFroomSet["escalator"]; 
         selectEndIndex = sixFroomSet["escalator"];
+
+        if (autoturn){
+          turn5f();
+        }
 
       }else if (endIn in fiveFroomSet){ // 6xx to 5xx
         selectStartIndex = sixFroomSet[startIn]; 
@@ -186,6 +200,10 @@ function reset(){
       }else if (startIn in fiveFroomSet){ // 5xx to 6xx 
         selectStartIndex = sixFroomSet["escalator"]; 
         selectEndIndex = sixFroomSet[endIn];
+
+        if (autoturn){
+          turn5f();
+        }
 
       }else{ // 6xx to 6xx
         selectStartIndex = sixFroomSet[startIn]; 
@@ -218,12 +236,20 @@ function draw() { // if will self-loopping automatically by the p5.js
     }
     
     var current = openSet[lowestCost]; // define the current node
-  
+    
     if (current === end) {
+      if ( selectStartIndex == fiveFroomSet["escalator"] &&  selectEndIndex == fiveFroomSet["escalator"]){
+        displayPath = false;
+        console.log("not useful")
+        noLoop();
+      }else{
       displayPath = true;
       console.log("DONE!");
       noLoop();
+      }
     }
+    
+    
 
     removeFromArray(openSet, current); // remove the node that we just visited from the openSet
     closedSet.push(current); // add the node that we just visited to the closedSet
@@ -262,13 +288,16 @@ function draw() { // if will self-loopping automatically by the p5.js
   }
 
   image(current_f,0,0,width,height);
-  
+
+  w = width / cols;
+  h = height / rows;
+
   // showing grid
-  for (var i = 0; i < cols; i++) {
-     for (var j = 0; j < rows; j++) {
-       grid[i][j].show_grid(color(0));
-     }
-   }
+  // for (var i = 0; i < cols; i++) {
+  //    for (var j = 0; j < rows; j++) {
+  //      grid[i][j].show_grid(color(0));
+  //    }
+  //  }
   
   path = [];
   var temp = current;
@@ -277,6 +306,8 @@ function draw() { // if will self-loopping automatically by the p5.js
     path.push(temp.previous);
     temp = temp.previous;
   }
+
+  
 
   // display the path
   if (displayPath) {
@@ -304,6 +335,8 @@ function zoomin(){
   canvasWidth *= scale;
   canvasHeight *= scale;
   resizeCanvas(canvasWidth, canvasHeight);
+  reset();
+  loop();
 };
 function zoomout(){
   scale = 1;
@@ -311,6 +344,8 @@ function zoomout(){
   canvasWidth *= scale;
   canvasHeight *= scale;
   resizeCanvas(canvasWidth, canvasHeight);
+  reset();
+  loop();
 };
 
 function minimap(){
