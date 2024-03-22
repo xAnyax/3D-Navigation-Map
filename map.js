@@ -194,13 +194,15 @@ function render() {
 document.addEventListener("DOMContentLoaded", function(){
     function switchmap() {
         document.getElementById("switchmap").addEventListener("click", function(){
-            document.getElementById("threedcontainer").style.visibility = 'visible'
+            document.getElementById("threedcontainer").style.visibility = 'visible';
+            document.getElementById("twodmapcontainer").style.visibility = 'hidden';
             init();
             render();
         });
     }
     function switchtwod() {
         document.getElementById("switch2d").addEventListener("click", function(){
+            document.getElementById("twodmapcontainer").style.visibility = 'visible';
             document.getElementById("threedcontainer").style.visibility = 'hidden';
         });
     }

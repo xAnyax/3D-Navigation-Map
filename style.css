@@ -1,8 +1,8 @@
 * {
     margin: 0;
     box-sizing: border-box;
-    overflow: hidden;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
+    overflow: hidden;
 }
 
 button {
