@@ -2,6 +2,7 @@
     margin: 0;
     box-sizing: border-box;
     overflow: hidden;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 button {
@@ -24,10 +25,10 @@ button {
     background-color: white;
     height: 100%;
     padding: 12px;
-    border: 1px solid black;
     overflow-y: auto;
     min-width: 350px;
     display: inline-block;
+    border-right: 2px black solid;
 }
 
 #searchword, #legendword{
@@ -141,17 +142,20 @@ canvas {
 #threedcontainer{
     position: absolute;
     top: 48px;
-    left: 350px;
     width: 82%;
+    overflow: hidden;
 }
 
 #minimap {
     position: absolute;
-    top: 60px;
-    right: 5px;
+    top: 5%;
+    right: 25px;
     border: 1px solid black;
     width: 250px;
     height: 370px;
+    padding: 0;
+    margin: 0;
+    display: block;
 }
 
 #switch2d {
@@ -165,4 +169,13 @@ canvas {
 
 #legendword{
     padding-bottom: 30px;
+}
+
+table {
+    text-align: left;
+    font-size: 19px;
+}
+
+td {
+    padding-bottom: 5px;
 }
