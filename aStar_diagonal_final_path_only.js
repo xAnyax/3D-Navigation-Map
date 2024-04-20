@@ -21,6 +21,8 @@ let done = true;
 let threeDActive = false;
 let displaythreeDpath;
 let p;
+let canvas;
+let isMinimap = false;
 
 const controls = { // for control the image position 
 	view: { x: 0, y: 0, zoom: 1 },
@@ -31,10 +33,10 @@ var roomSet = {
 	"501": [27, 56], "502": [40, 66], "503": [40, 47]
 	, "504": [40, 39], "505": [46, 32], "506": [36, 32]
 	, "507": [23, 32], "508": [16, 12], "509": [16, 20]
-	, "510": [16, 30], "601": [27, 56], "602": [40, 66]
-	, "603": [40, 47], "604": [40, 39], "605": [46, 32]
-	, "606": [36, 32], "607": [23, 32], "608": [16, 12]
-	, "609": [16, 20], "610": [16, 30], "6Escalator": [23, 37],
+	, "510": [16, 30], "601": [14, 56], "602": [27, 56], "603": [40, 66]
+	, "604": [40, 47], "605": [40, 39], "606": [46, 32]
+	, "607": [36, 32], "608": [23, 32], "609": [16, 12]
+	, "610": [16, 20], "611": [16, 30], "6Escalator": [23, 37],
 	"5Escalator": [27, 52], "Accessible Toilet": [17, 37], "Male Toilet": [17, 34]
 	, "Female Toilet": [17, 40], "Elevator": [10, 52], "Escalator": [27, 52]
 };
@@ -66,6 +68,7 @@ function turn5f() {
 	autoturn = false;
 	reset();
 	loop();
+
 }
 
 // change to 6floor 2d map and find the path
@@ -96,7 +99,7 @@ function setup() {
 	fiveFloorBtn.mousePressed(turn5f); // if 5F button is clicked
 	sixFloorBtn.mousePressed(turn6f); // if 6F button is clicked 
 
-	var canvas = createCanvas(canvasWidth, canvasHeight);
+	canvas = createCanvas(canvasWidth, canvasHeight);
 	canvas.mouseWheel(e => Controls.zoom(controls).worldZoom(e))
 	current_image = img5f;
 	current_floor = "5f"
@@ -106,6 +109,7 @@ function setup() {
 	w = width / cols; // width of each node 
 	h = height / rows; // height of each 
 	noLoop();
+
 }
 
 function reset() {
@@ -276,7 +280,7 @@ function draw() { // if will self-loopping automatically by the p5.jsxs
 	// showing grid
 	// for (var i = 0; i < cols; i++) {
 	//    for (var j = 0; j < rows; j++) {
-	//      grid[i][j].show_grid(color(0));
+	//      grid[i][j].show_grid(color(0), controls.view.x, controls.view.y);
 	//    }
 	// }
 
@@ -295,6 +299,9 @@ function draw() { // if will self-loopping automatically by the p5.jsxs
 		}
 		if (!done && roomIndex_end == roomSet["5Escalator"] && threeDActive) {
 			turn6f();
+		}
+		else if (!done && roomIndex_end == roomSet["6Escalator"] && threeDActive) {
+			turn5f();
 		}
 		noFill();
 		stroke('blue');
@@ -337,9 +344,11 @@ function hidebox() {
 	document.getElementById("errormessage").style.visibility = 'hidden';
 }
 
+if (!threeDActive){
 window.mousePressed = e => Controls.move(controls).mousePressed(e);
 window.mouseDragged = e => Controls.move(controls).mouseDragged(e);
 window.mouseReleased = e => Controls.move(controls).mouseReleased(e);
+}
 
 class Controls {
 	static move(controls) {
@@ -399,3 +408,28 @@ function checkalarm(){
 		document.getElementById("errormessage").textContent = "There no such destination, please enter again.";
 	}
 }
+function minimap(){
+	document.getElementById("switchmap").addEventListener("click", function () {
+		canvas.parent('minimapContainer');
+		canvasWidth = 250;
+		canvasHeight = 450;
+		resizeCanvas(canvasWidth, canvasHeight);
+		reset();
+		loop();
+		isMinimap = true;
+	});
+}
+minimap();
+
+function canvasmap(){
+	document.getElementById("switch2d").addEventListener("click", function () {
+		canvas.parent('twodmapcontainer');
+		canvasWidth = 1000;
+		canvasHeight = 1800;
+		resizeCanvas(canvasWidth, canvasHeight);
+		run();
+		hidebox();
+		isMinimap = false;
+	});
+}
+canvasmap();
