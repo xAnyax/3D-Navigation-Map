@@ -34,8 +34,7 @@ const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerH
 var controls = new PointerLockControls(camera, threeDContainer);
 const controllerCamera = controls.getObject();
 
-scene.add(new THREE.GridHelper(100, 100));
-scene.add(new THREE.AxesHelper(5));
+
 
 
 // add reference line
@@ -62,9 +61,9 @@ function init() {
 
     const loader = new GLTFLoader().setPath('map/');
 
-    loader.load('56_5.0.gltf', function (gltf) { // load the 3D map to the scene
+    loader.load('56_8.0.gltf', function (gltf) { // load the 3D map to the scene
         const mesh = gltf.scene; // the object of the map
-        mesh.position.set(0, 0, 0); // set position of the map
+        mesh.position.set(0, -0.5, 0); // set position of the map
         scene.add(mesh); // add the map to the scene 
 
         const ambientLight = new THREE.AmbientLight(0x707070, 1);
@@ -224,11 +223,8 @@ window.addEventListener('resize', function () {
     renderer.setSize(window.innerWidth, window.innerHeight);
 })
 
-
-
-
-
 displaythreeDpath = function() {
+    var PYcod;
     var Xcod;
     var Zcod;
     var obj;
@@ -237,14 +233,15 @@ displaythreeDpath = function() {
     var EY = 5.4;
     var EX = 23;
     var Eshpere;
-    if (done) {
+    if (done && reset1) {
         for (var i = 0; i < threeDPath.length; i++) {
             scene.remove(threeDPath[i]);
         }
+        done = false
     }
-    done = false
+
     if (!sameFloor) {
-        for (var Z = 38; Z < 52; Z++) {
+        for (var Z = 38; Z < 53; Z++) {
 
             if (Z == 41) {
                 EY -= 0.2;
@@ -257,16 +254,25 @@ displaythreeDpath = function() {
             else if (Z > 40) {
                 EY -= 0.6;
             }
+            if (Z >= 41){
+                EX += 0.2;
+            }
+            if (Z == 52){
+                EX += 0.7;
+            }
             Eshpere = new THREE.Mesh(circle, Bmaterial);
             scene.add(Eshpere);
             Eshpere.position.set(EX, EY, Z);
+            threeDPath.push(Eshpere);
         }
     }
 
     if (roomNum_Start[0] == '5') {
+        PYcod = -0.4;
         Ycod = -0.4;
     }
     else if (roomNum_Start[0] == '6') {
+        PYcod = 5.2;
         Ycod = 5.2;
     }
     if(roomIndex_start == roomSet["5Escalator"]){
@@ -275,9 +281,11 @@ displaythreeDpath = function() {
     else if (roomIndex_start == roomSet["6Escalator"]){
         Ycod = 5.2;
     }
-
-    camera.position.set(roomSet[roomNum_Start][0], Ycod + 1, roomSet[roomNum_Start][1]);
-    
+    if (reset1){
+        camera.position.set(roomSet[roomNum_Start][0], PYcod + 1, roomSet[roomNum_Start][1]);
+        controls.getObject().lookAt(0,  Ycod + 1, 0);
+        reset1 = false;
+    }
 
     for (var i = path.length - 1; i >= 0; i--) {
         Xcod = path[i].x;
@@ -290,6 +298,7 @@ displaythreeDpath = function() {
             obj.rotateX(Math.PI);
             obj.position.set(Xcod, Ycod + 2.5, Zcod);
             threeDPath.push(obj);
+            done = true;
         }
         else if (i == path.length - 1 && (sameFloor || roomIndex_end == roomSet["5Escalator"] || roomIndex_end == roomSet["6Escalator"])) { // start point
             material = Gmaterial;
@@ -310,3 +319,26 @@ displaythreeDpath = function() {
     }
     return 0;
 }
+
+function switch56() {
+    var cameraY = camera.position.y;
+    var tempMap = current_image;
+    if (isMinimap == true){
+        if (cameraY >= 5.2) {
+            current_image = img6f;
+			current_floor = "6f"
+        } else if (cameraY < 5.2) {
+            current_image = img5f;
+			current_floor = "5f"
+        }
+    } 
+
+    if (tempMap != current_image){
+        reset();
+        loop();
+        tempMap = current_image;
+    }
+    setTimeout(switch56, 1000);
+}
+
+switch56();

@@ -1,4 +1,3 @@
-let scales = 1;
 let canvasWidth = 1000;
 let canvasHeight = 1800;
 var a = 0;
@@ -23,6 +22,16 @@ let displaythreeDpath;
 let p;
 let canvas;
 let isMinimap = false;
+let reset1 = false;
+var startX = 0;
+var startY = 0; 
+let autoJump = false;
+let scales = 1;
+var changeX = 0;
+var changeY = 0;
+var zoomcount = 0
+
+// 1030 1098
 
 const controls = { // for control the image position 
 	view: { x: 0, y: 0, zoom: 1 },
@@ -33,17 +42,16 @@ var roomSet = {
 	"501": [27, 56], "502": [40, 66], "503": [40, 47]
 	, "504": [40, 39], "505": [46, 32], "506": [36, 32]
 	, "507": [23, 32], "508": [16, 12], "509": [16, 20]
-	, "510": [16, 30], "601": [14, 56], "602": [27, 56], "603": [40, 66]
+	, "510": [16, 30], "601": [4, 56], "602": [27, 56], "603": [40, 66]
 	, "604": [40, 47], "605": [40, 39], "606": [46, 32]
 	, "607": [36, 32], "608": [23, 32], "609": [16, 12]
 	, "610": [16, 20], "611": [16, 30], "6Escalator": [23, 37],
 	"5Escalator": [27, 52], "Accessible Toilet": [17, 37], "Male Toilet": [17, 34]
-	, "Female Toilet": [17, 40], "Elevator": [10, 52], "Escalator": [27, 52]
+	, "Female Toilet": [17, 40], "Elevator": [10, 52]
 };
 
 var roomIndex_start;
 var roomIndex_end;
-var current_floor;
 var current_image;
 var roomNum_Start;
 var roomNum_End;
@@ -56,6 +64,8 @@ function preload() {
 
 function run() {
 	autoturn = true;
+	autoJump = true;
+	reset1 = true;
 	reset();
 	loop();
 	checkalarm();
@@ -100,9 +110,8 @@ function setup() {
 	sixFloorBtn.mousePressed(turn6f); // if 6F button is clicked 
 
 	canvas = createCanvas(canvasWidth, canvasHeight);
-	canvas.mouseWheel(e => Controls.zoom(controls).worldZoom(e))
-	current_image = img5f;
-	current_floor = "5f"
+	current_image = img5f;	
+	current_floor = "5f";
 
 	var mapContainer = document.getElementById('twodmapcontainer');
 	canvas.parent(mapContainer); // put the canvas onto container
@@ -113,7 +122,6 @@ function setup() {
 }
 
 function reset() {
-	done = false
 	wrongFloor = false;
 	openSet = []; // an array contains all node that we will visit
 	closedSet = []; // an array contains all node that we have visited
@@ -152,7 +160,6 @@ function reset() {
 				sameFloor = true;
 				if (autoturn) {
 					turn6f();
-					return;
 				}
 
 			} else if (roomNum_End[0] == "6") { // 5xx to 6xx
@@ -180,7 +187,6 @@ function reset() {
 
 				if (autoturn) {
 					turn5f();
-					return;
 				}
 
 			} else if (roomNum_End[0] == "5") { // 6xx to 5xx
@@ -209,6 +215,9 @@ function reset() {
 		end = grid.at(roomIndex_end[0]).at(roomIndex_end[1]); // define the ending point
 		openSet.push(start);
 
+		startX =  roomIndex_start[0];
+		startY = roomIndex_start[1];
+
 	} else {
 		noLoop();
 	}
@@ -217,6 +226,7 @@ function reset() {
 function draw() { // if will self-loopping automatically by the p5.jsxs
 	clear();
 	image(current_image, controls.view.x, controls.view.y, width, height);
+	
 
 	displayPath = false;
 	if (wrongFloor) {
@@ -235,6 +245,7 @@ function draw() { // if will self-loopping automatically by the p5.jsxs
 
 		if (current === end) {
 			displayPath = true;
+			console.log("done!");
 			noLoop();
 		}
 
@@ -298,10 +309,14 @@ function draw() { // if will self-loopping automatically by the p5.jsxs
 			p = displaythreeDpath();
 		}
 		if (!done && roomIndex_end == roomSet["5Escalator"] && threeDActive) {
-			turn6f();
+			current_floor = "6f"
+			reset();
+			loop();
 		}
 		else if (!done && roomIndex_end == roomSet["6Escalator"] && threeDActive) {
-			turn5f();
+			current_floor = "5f"
+			reset();
+			loop();
 		}
 		noFill();
 		stroke('blue');
@@ -322,22 +337,35 @@ function draw() { // if will self-loopping automatically by the p5.jsxs
 
 // zoomin and out 
 function zoomin() {
-	scales = 1;
-	scales *= 1.05;
-	canvasWidth *= scales;
-	canvasHeight *= scales;
-	resizeCanvas(canvasWidth, canvasHeight);
-	reset();
-	loop();
+	if (zoomcount < 6){
+		scales = 1;
+		scales *= 1.05;
+		canvasWidth *= scales;
+		canvasHeight *= scales;
+		resizeCanvas(canvasWidth, canvasHeight);
+		reset();
+		loop();
+		zoomcount += 1
+	}else{
+		console.log("You cannot zoom in more")
+	}
+	
 };
 function zoomout() {
-	scales = 1;
-	scales *= 0.95;
-	canvasWidth *= scales;
-	canvasHeight *= scales;
-	resizeCanvas(canvasWidth, canvasHeight);
-	reset();
-	loop();
+	if (zoomcount >-13){
+		scales = 1;
+		scales *= 0.95;
+		canvasWidth *= scales;
+		canvasHeight *= scales;
+		changeY -= 50;
+		resizeCanvas(canvasWidth, canvasHeight);
+		controls.view.x = 0
+		controls.view.y = -300;
+		reset();
+		loop();
+		zoomcount -= 1
+	}else console.log("You cannot zoom out more")
+	
 };
 
 function hidebox() {
@@ -365,23 +393,32 @@ class Controls {
 			const pos = { x: e.clientX, y: e.clientY };
 			const dx = pos.x - prevX;
 			const dy = pos.y - prevY;
-			//   console.log(dx +", "+ dy)
 
 			var checkX = controls.view.x + dx;
 			var checkY = controls.view.y + dy;
+			// console.log(checkX +", "+ checkY)
 
-			//   if((prevX || prevY) &&checkX <0 && checkY<0 && checkX>-100 && checkY>-100) {
-			if ((prevX || prevY)) {
+
+			if((prevX || prevY) &&checkX <15*w && checkY<15*h && checkX>=-15*w && checkY>=-60*h) {
+			// if ((prevX || prevY)) {
 
 				controls.view.x += dx;
 				controls.view.y += dy;
 
+				
 				// console.log(controls.view.x,controls.view.y)
 				controls.viewPos.prevX = pos.x, controls.viewPos.prevY = pos.y
 
 			}
-			reset();
-			loop();
+
+			if(isMinimap){
+				controls.view.x = 0;
+				controls.view.y = 0;
+			}else{
+				reset();
+				loop();	
+			}
+
 
 		}
 
@@ -401,25 +438,38 @@ class Controls {
 }
 
 function checkalarm(){
-	if ((roomNum_Start in roomSet) && (roomNum_End in roomSet)){
+	document.getElementById("errormessage").style.visibility = "visible";
+
+	if (!((roomNum_Start in roomSet) && (roomNum_End in roomSet))){
+		var errormsg = "<h3>Alarm(!):</h3>" + "<br>There no such destination, please enter again!";
+		document.getElementById("errormessage").innerHTML = errormsg;
+	}else if ((roomNum_Start[0]) != (roomNum_End[0])){
+		var switchmsg = "<h3>Alarm(!):</h3>"+ "<br>You can switch to another floor to check path";
+		document.getElementById("errormessage").innerHTML = switchmsg;
+	}else {
 		document.getElementById("errormessage").style.visibility = "hidden";
-	} else {
-		document.getElementById("errormessage").style.visibility = "visible";
-		document.getElementById("errormessage").textContent = "There no such destination, please enter again.";
+
+		
 	}
 }
+
 function minimap(){
 	document.getElementById("switchmap").addEventListener("click", function () {
 		canvas.parent('minimapContainer');
-		canvasWidth = 250;
-		canvasHeight = 450;
+		canvasWidth = 275;
+		canvasHeight = 495;
 		resizeCanvas(canvasWidth, canvasHeight);
+		controls.view.x = 0;
+		controls.view.y = 0;
 		reset();
 		loop();
+		reset1 = true;
 		isMinimap = true;
+
 	});
 }
 minimap();
+
 
 function canvasmap(){
 	document.getElementById("switch2d").addEventListener("click", function () {
