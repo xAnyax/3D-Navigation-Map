@@ -321,7 +321,9 @@ displaythreeDpath = function() {
 }
 
 function switch56() {
+    var cameraX = camera.position.x;
     var cameraY = camera.position.y;
+    var cameraZ = camera.position.z;
     var tempMap = current_image;
     if (isMinimap == true){
         if (cameraY >= 5.2) {
@@ -339,6 +341,13 @@ function switch56() {
         tempMap = current_image;
     }
     setTimeout(switch56, 1000);
+    stroke('black');
+    strokeWeight(10);
+    point(cameraX*w*275/1000, cameraZ*h*495/1800);
+    console.log("x"+cameraX*w);
+    console.log("z"+cameraZ*h);
+    console.log(w)
+    console.log(h)
 }
 
 switch56();
