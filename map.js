@@ -61,7 +61,7 @@ function init() {
 
     const loader = new GLTFLoader().setPath('map/');
 
-    loader.load('56_8.0.gltf', function (gltf) { // load the 3D map to the scene
+    loader.load('56_10.0.gltf', function (gltf) { // load the 3D map to the scene
         const mesh = gltf.scene; // the object of the map
         mesh.position.set(0, -0.5, 0); // set position of the map
         scene.add(mesh); // add the map to the scene 
@@ -320,12 +320,21 @@ displaythreeDpath = function() {
     return 0;
 }
 
-function switch56() {
+var ptArray = [];
+
+/*function switch56() {
     var cameraX = camera.position.x;
-    var cameraY = camera.position.y;
     var cameraZ = camera.position.z;
+    var cameraY = camera.position.y;
     var tempMap = current_image;
     if (isMinimap == true){
+        stroke('black');
+        strokeWeight(4);
+        rmPt();
+        ptArray.push({x:cameraX * w * (275/1000), z:cameraZ * h * (495/1800)});
+        for (var i = 0; i == ptArray.length; i++) {
+            ellipse(ptArray[i].x, ptArray[i].z, 5, 5);
+        }
         if (cameraY >= 5.2) {
             current_image = img6f;
 			current_floor = "6f"
@@ -341,13 +350,37 @@ function switch56() {
         tempMap = current_image;
     }
     setTimeout(switch56, 1000);
-    stroke('black');
-    strokeWeight(10);
-    point(cameraX*w*275/1000, cameraZ*h*495/1800);
-    console.log("x"+cameraX*w);
-    console.log("z"+cameraZ*h);
-    console.log(w)
-    console.log(h)
-}
+}*/
 
 switch56();
+
+function rmPt(a){
+    ptArray.splice(a, 1);
+}
+
+function switch56() {
+    var cameraX = camera.position.x;
+    var cameraZ = camera.position.z;
+    var cameraY = camera.position.y;
+    var tempMap = current_image;
+    if (isMinimap == true){
+        redraw();
+        stroke('black');
+        strokeWeight(4);
+        point(cameraX * w * (275/1000), cameraZ * h * (495/1800));
+        if (cameraY >= 5.2) {
+            current_image = img6f;
+			current_floor = "6f"
+        } else if (cameraY < 5.2) {
+            current_image = img5f;
+			current_floor = "5f"
+        }
+    } 
+
+    if (tempMap != current_image){
+        reset();
+        loop();
+        tempMap = current_image;
+    }
+    setTimeout(switch56, 100);
+}
