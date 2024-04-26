@@ -61,7 +61,7 @@ function init() {
 
     const loader = new GLTFLoader().setPath('map/');
 
-    loader.load('56_10.0.gltf', function (gltf) { // load the 3D map to the scene
+    loader.load('56_11.0.gltf', function (gltf) { // load the 3D map to the scene
         const mesh = gltf.scene; // the object of the map
         mesh.position.set(0, -0.5, 0); // set position of the map
         scene.add(mesh); // add the map to the scene 
@@ -178,11 +178,11 @@ function check() {
         controls.getObject().translateZ(velocity.z * delta); // update the z-axis of camera
 
 
-        // if (controls.getObject().position.y < -100) {
-        //     velocity.y = 0;
-        //     controls.getObject().position.set(0, 0, 0);
-        //     canJump = true;
-        // }
+        if (controls.getObject().position.y < -10) {
+            velocity.y = 0;
+            controls.getObject().position.set(0, 0, 0);
+            canJump = true;
+        }
     }
 }
 
@@ -223,7 +223,7 @@ window.addEventListener('resize', function () {
     renderer.setSize(window.innerWidth, window.innerHeight);
 })
 
-displaythreeDpath = function() {
+displaythreeDpath = function () {
     var PYcod;
     var Xcod;
     var Zcod;
@@ -254,10 +254,10 @@ displaythreeDpath = function() {
             else if (Z > 40) {
                 EY -= 0.6;
             }
-            if (Z >= 41){
+            if (Z >= 41) {
                 EX += 0.2;
             }
-            if (Z == 52){
+            if (Z == 52) {
                 EX += 0.7;
             }
             Eshpere = new THREE.Mesh(circle, Bmaterial);
@@ -275,15 +275,15 @@ displaythreeDpath = function() {
         PYcod = 5.2;
         Ycod = 5.2;
     }
-    if(roomIndex_start == roomSet["5Escalator"]){
+    if (roomIndex_start == roomSet["5Escalator"]) {
         Ycod = -0.4;
     }
-    else if (roomIndex_start == roomSet["6Escalator"]){
+    else if (roomIndex_start == roomSet["6Escalator"]) {
         Ycod = 5.2;
     }
-    if (reset1){
+    if (reset1) {
         camera.position.set(roomSet[roomNum_Start][0], PYcod + 1, roomSet[roomNum_Start][1]);
-        controls.getObject().lookAt(0,  Ycod + 1, 0);
+        controls.getObject().lookAt(0, Ycod + 1, 0);
         reset1 = false;
     }
 
@@ -337,10 +337,10 @@ var ptArray = [];
         }
         if (cameraY >= 5.2) {
             current_image = img6f;
-			current_floor = "6f"
+            current_floor = "6f"
         } else if (cameraY < 5.2) {
             current_image = img5f;
-			current_floor = "5f"
+            current_floor = "5f"
         }
     } 
 
@@ -354,7 +354,7 @@ var ptArray = [];
 
 switch56();
 
-function rmPt(a){
+function rmPt(a) {
     ptArray.splice(a, 1);
 }
 
@@ -362,25 +362,51 @@ function switch56() {
     var cameraX = camera.position.x;
     var cameraZ = camera.position.z;
     var cameraY = camera.position.y;
-    var tempMap = current_image;
-    if (isMinimap == true){
+    var mini_current_image = current_image;
+    if (isMinimap == true) {
         redraw();
+        if (wrongFloor){
+            test = []
+            testb = false;
+        }
+        noFill();
+        stroke('blue');
+        strokeWeight(w / 4);
+        beginShape();
+        for (var i = 0; i < test.length; i++) {
+            vertex(test[i].x * w + w / 2, test[i].y * h + h / 2);
+        }
+        endShape();
+
         stroke('black');
         strokeWeight(4);
-        point(cameraX * w * (275/1000), cameraZ * h * (495/1800));
+        point(cameraX * o * (275 / 1000), cameraZ * k * (495 / 1800));
+
+
+        if(testb){
+            if(roomNum_End[0] != roomNum_Start[0]){
+                end.show_node('green', 0, 0);
+                start.show_node('red', 0, 0);
+            }else{
+                start.show_node('green', 0, 0);
+		        end.show_node('red', 0, 0);
+            }
+            
+        }
+        
         if (cameraY >= 5.2) {
             current_image = img6f;
-			current_floor = "6f"
+            current_floor = "6f"
         } else if (cameraY < 5.2) {
             current_image = img5f;
-			current_floor = "5f"
+            current_floor = "5f"
         }
-    } 
+    }
 
-    if (tempMap != current_image){
+    if (mini_current_image != current_image) {
         reset();
         loop();
-        tempMap = current_image;
+        mini_current_image = current_image;
     }
     setTimeout(switch56, 100);
 }
