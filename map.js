@@ -63,7 +63,7 @@ function init() {
 
     const loader = new GLTFLoader().setPath('map/');
 
-    loader.load('56_11.0.gltf', function (gltf) { // load the 3D map to the scene
+    loader.load('56_13.0.gltf', function (gltf) { // load the 3D map to the scene
         const mesh = gltf.scene; // the object of the map
         mesh.position.set(0, -0.5, 0); // set position of the map
         scene.add(mesh); // add the map to the scene 
@@ -202,6 +202,11 @@ function check() {
         }
         if (controls.getObject().position.z > 89) {
             velocity.z = 0;
+            controls.getObject().position.set(30, 15, 36);
+            canJump = true;
+        }
+        if (controls.getObject().position.y > 18) {
+            velocity.y = 0;
             controls.getObject().position.set(30, 15, 36);
             canJump = true;
         }
@@ -430,7 +435,5 @@ function switch56() {
         loop();
         mini_current_image = current_image;
     }
-    console.log("X:"+cameraX);
-    console.log("z"+cameraZ);
     setTimeout(switch56, 100);
 }
