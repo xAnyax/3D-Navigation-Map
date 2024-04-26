@@ -14,6 +14,8 @@ var moveLeft = false;
 var moveRight = false;
 var moveUp = false;
 var moveDown = false;
+let direction = new THREE.Vector3();
+var canJump = false;
 
 // var canJump = false;
 // var spaceUp = true;
@@ -151,12 +153,12 @@ function check() {
         var delta = clock.getDelta(); // refresh time
         velocity.x -= velocity.x * 10.0 * delta;
         velocity.z -= velocity.z * 10.0 * delta;
-        velocity.y -= velocity.y * 10.0 * delta;
+        //velocity.y -= velocity.y * 10.0 * delta;
 
-        //velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass (down speed)
-        // direction.z = Number(moveForward) - Number(moveBackward);
-        // direction.x = Number(moveLeft) - Number(moveRight);
-        // direction.normalize(); // Ensures consistent movements in all directions
+        velocity.y -= velocity.y * 100.0 * delta; // 100.0 = mass (down speed)
+        direction.z = Number(moveForward) - Number(moveBackward);
+        direction.x = Number(moveLeft) - Number(moveRight);
+        direction.normalize(); // Ensures consistent movements in all directions
 
         // if (i === 284) {
         //     console.log(direction.z);
@@ -178,9 +180,29 @@ function check() {
         controls.getObject().translateZ(velocity.z * delta); // update the z-axis of camera
 
 
-        if (controls.getObject().position.y < -10) {
+        if (controls.getObject().position.y < -9) {
             velocity.y = 0;
-            controls.getObject().position.set(0, 0, 0);
+            controls.getObject().position.set(30, 15, 36);
+            canJump = true;
+        }
+        if (controls.getObject().position.x < 1) {
+            velocity.x = 0;
+            controls.getObject().position.set(30, 15, 36);
+            canJump = true;
+        }
+        if (controls.getObject().position.z < 1) {
+            velocity.z = 0;
+            controls.getObject().position.set(30, 15, 36);
+            canJump = true;
+        }
+        if (controls.getObject().position.x > 55.8) {
+            velocity.x = 0;
+            controls.getObject().position.set(30, 15, 36);
+            canJump = true;
+        }
+        if (controls.getObject().position.z > 89) {
+            velocity.z = 0;
+            controls.getObject().position.set(30, 15, 36);
             canJump = true;
         }
     }
@@ -408,5 +430,7 @@ function switch56() {
         loop();
         mini_current_image = current_image;
     }
+    console.log("X:"+cameraX);
+    console.log("z"+cameraZ);
     setTimeout(switch56, 100);
 }
