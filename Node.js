@@ -7,12 +7,6 @@ function Node(x, y) {
 	this.neighbors = []; // an array of neighbors of the node 
 	this.previous = undefined; // declare the previous node 
 	this.obstacles = false; // declare the obstacles
-	this.room = undefined;
-
-	this.delObstacles = function () {
-		if (x >= 0 && y >= 0)
-			this.obstacles = flase
-	}
 
 	this.fiveFloor = function () {
 
@@ -51,10 +45,10 @@ function Node(x, y) {
 		if (x == 27 && y >= 52 && y <= 56) { // for 501
 			this.obstacles = false;
 		}
-		if (x == 17 && (y == 34 || y == 40 || y == 37)){
+		if (x == 17 && (y == 34 || y == 40 || y == 37)){ // for toilets
 			this.obstacles = false;
 		}
-		if (x >= 10 && x <=18 && y == 52){
+		if (x >= 10 && x <=18 && y == 52){ // for elevator
 			this.obstacles = false;
 		}
 	}
@@ -70,7 +64,7 @@ function Node(x, y) {
 			this.obstacles = false;
 		}
 
-		if ((x == 16 || x == 17) && (y == 12 || y == 20 || y == 30)) { // for 508, 509 and 510
+		if ((x == 16 || x == 17) && (y == 12 || y == 20 || y == 30)) { // for 609, 610,611
 			this.obstacles = false;
 		}
 
@@ -78,7 +72,7 @@ function Node(x, y) {
 			this.obstacles = false
 		}
 
-		if ((x == 23 || x == 36 || x == 46) & (y >= 32 && y <= 34)) { // for 507, 506 and 505
+		if ((x == 23 || x == 36 || x == 46) & (y >= 32 && y <= 34)) { // for 608, 607 and 606
 			this.obstacles = false
 		}
 
@@ -86,32 +80,38 @@ function Node(x, y) {
 			this.obstacles = false;
 		}
 
-		if ((x == 39 || x == 40) && (y == 39 || y == 47 || y == 66)) { // for 504, 503 and 502
+		if ((x == 39 || x == 40) && (y == 39 || y == 47 || y == 66)) { // for 605, 604 and 603
 			this.obstacles = false;
 		}
 
 		if (x >= 18 && x <= 38 && y == 55) { // for second row road
 			this.obstacles = false;
 		}
-		if (x == 23 & (y == 35 || y == 36)){
+		if (x == 23 & (y == 35 || y == 36)){ // for escalator 
 			this.obstacles = false;
 		}
 		if (x == 27 && y == 56) { // for 602
 			this.obstacles = false;
 		}
 
-		if ((x == 23 || x == 24) && y == 37) {
+		if ((x == 23 || x == 24) && y == 37) { // for escalator 
 			this.obstacles = false;
 		}
-		if (x == 17 && (y == 34 || y == 40 || y == 37)){
+		if (x == 17 && (y == 34 || y == 40 || y == 37)){ // for toilets
 			this.obstacles = false;
 		}
-		if (x >= 10 && x <=18 && y == 52){
+		if (x >= 10 && x <=18 && y == 52){ // for elevator 
 			this.obstacles = false;
 		}
-		if ((x >= 4 && x <= 18 && y == 55) || (x == 4 && y == 56)){
+		if ((x >= 4 && x <= 18 && y == 55) || (x == 4 && y == 56)){ //for 601
 			this.obstacles = false;
 		}
+
+		if (x == 10 && (y==53||y==54)){ // for connect 601 and elevator
+			this.obstacles = false;
+		}
+
+
 	}
 
 	this.show_grid = function (color,changeX,changeY) {

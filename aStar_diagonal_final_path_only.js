@@ -33,7 +33,6 @@ var zoomcount = 0
 let o;
 let k;
 let current_floor;
-
 // 1030 1098
 let test = [];
 let testb;
@@ -42,7 +41,7 @@ const controls = { // for control the image position
 	viewPos: { prevX: null, prevY: null, isDragging: false },
 }
 
-var roomSet = {
+let roomSet = {
 	"501": [27, 56], "502": [40, 66], "503": [40, 47]
 	, "504": [40, 39], "505": [46, 32], "506": [36, 32]
 	, "507": [23, 32], "508": [16, 12], "509": [16, 20]
@@ -50,16 +49,16 @@ var roomSet = {
 	, "604": [40, 47], "605": [40, 39], "606": [46, 32]
 	, "607": [36, 32], "608": [23, 32], "609": [16, 12]
 	, "610": [16, 20], "611": [16, 30], "6Escalator": [23, 37],
-	"5Escalator": [27, 52], "Accessible Toilet": [17, 37], "Male Toilet": [17, 34]
-	, "Female Toilet": [17, 40], "Elevator": [10, 52], "dummy": [0, 0]
+	"5Escalator": [27, 52], "Accessible Toilet": [17, 37], "Female Toilet": [17, 34]
+	, "Male Toilet": [17, 40], "Elevator": [10, 52], "Escalator" : [23, 37]
 };
 
-var roomIndex_start;
-var roomIndex_end;
-var current_image;
-var roomNum_Start;
-var roomNum_End;
-var autoturn = false;
+let roomIndex_start;
+let roomIndex_end;
+let current_image;
+let roomNum_Start;
+let roomNum_End;
+let autoturn = false;
 
 function preload() {
 	img5f = loadImage('map/5floor_done_75.png');
@@ -124,8 +123,8 @@ function setup() {
 	h = height / rows; // height of each 
 
 	noLoop();
-	o = w;
-	k = h;
+	o = w; // for min map
+	k = h; // for min map
 }
 
 function reset() {
@@ -161,6 +160,7 @@ function reset() {
 	sameFloor = false;
 	if ((roomNum_Start in roomSet) && (roomNum_End in roomSet)) { // check the input value
 		if (current_floor == "5f") { // user staying on 5F
+
 			if (roomNum_Start[0] == "6" && roomNum_End[0] == "6") { // 6xx to 6xx
 				wrongFloor = true;
 				sameFloor = true;
@@ -171,28 +171,30 @@ function reset() {
 			} else if (roomNum_End[0] == "6") { // 5xx to 6xx
 				roomIndex_start = roomSet[roomNum_Start];
 				roomIndex_end = roomSet["5Escalator"];
-				if (isMinimap) {
-					roomIndex_start = roomSet["5Escalator"];
-					roomIndex_end = roomSet[roomNum_Start];
-				}
+
 
 			} else if (roomNum_Start[0] == "6") { // 6xx to 5xx 
 				roomIndex_start = roomSet["5Escalator"];
 				roomIndex_end = roomSet[roomNum_End];
-				if (isMinimap) {
-					roomIndex_start = roomSet[roomNum_End];
-					roomIndex_end = roomSet["5Escalator"];
-				}
 				if (autoturn) {
 					turn6f();
 				}
 
 			} else { // 5xx to 5xx
+				if (roomNum_End == "Escalator") {
+					roomIndex_end = roomSet["5Escalator"];
+
+				}else{
+					roomIndex_end = roomSet[roomNum_End];
+				}
+				if (roomNum_Start == "Escalator") {
+					roomIndex_start = roomSet["5Escalator"];
+
+				}else{
+					roomIndex_start = roomSet[roomNum_Start];
+				}
 				sameFloor = true;
-				roomIndex_start = roomSet[roomNum_Start];
-				roomIndex_end = roomSet[roomNum_End];
-
-
+				
 			}
 		} else if (current_floor == "6f") { // user stay on 6F
 			if (roomNum_Start[0] == "5" && roomNum_End[0] == "5") { // 5xx to 5xx
@@ -201,22 +203,14 @@ function reset() {
 				if (autoturn) {
 					turn5f();
 				}
-
+				
 			} else if (roomNum_End[0] == "5") { // 6xx to 5xx
 				roomIndex_start = roomSet[roomNum_Start];
 				roomIndex_end = roomSet["6Escalator"];
-				if (isMinimap) {
-					roomIndex_start = roomSet["6Escalator"];
-					roomIndex_end = roomSet[roomNum_Start];
-				}
 
 			} else if (roomNum_Start[0] == "5") { // 5xx to 6xx 
 				roomIndex_start = roomSet["6Escalator"];
 				roomIndex_end = roomSet[roomNum_End];
-				if (isMinimap) {
-					roomIndex_start = roomSet[roomNum_End];
-					roomIndex_end = roomSet["6Escalator"];
-				}
 
 				if (autoturn) {
 					turn5f();
@@ -224,12 +218,16 @@ function reset() {
 
 			} else { // 6xx to 6xx
 				if (roomNum_End == "Escalator") {
-					roomNum_End = "6Escalator"
+					roomIndex_end = roomSet["6Escalator"];
+				}else{
+					roomIndex_end = roomSet[roomNum_End];
+				}
+				if (roomNum_Start == "Escalator") {
+					roomIndex_start = roomSet["6Escalator"];
+				}else{
+					roomIndex_start = roomSet[roomNum_Start];
 				}
 				sameFloor = true;
-				roomIndex_start = roomSet[roomNum_Start];
-				roomIndex_end = roomSet[roomNum_End];
-
 			}
 		}
 		start = grid.at(roomIndex_start[0]).at(roomIndex_start[1]); // define the starting point
@@ -249,10 +247,7 @@ function draw() { // if will self-loopping automatically by the p5.jsxs
 	image(current_image, controls.view.x, controls.view.y, width, height);
 
 	displayPath = false;
-	if (wrongFloor) {
-		console.log("not useful")
-		noLoop();
-	}
+	
 	if (openSet.length > 0) {
 		var lowestCost = 0;
 		for (var i = 0; i < openSet.length; i++) { // finding a node that having a lowest f cost inside the openSet
@@ -322,28 +317,36 @@ function draw() { // if will self-loopping automatically by the p5.jsxs
 		path.push(temp.previous);
 		temp = temp.previous;
 	}
-
+	
 	// display the path
 	if (displayPath) {
 		test = path;
 		testb = (test.length > 1)
-
-
+		
 		if (threeDActive) {
 			p = displaythreeDpath();
 		}
-		if (!done && roomIndex_end == roomSet["5Escalator"] && threeDActive) {
+		if (!done && (roomIndex_start == roomSet["5Escalator"]) && threeDActive) {
 			current_floor = "6f"
 			reset();
 			loop();
 		}
-		else if (!done && roomIndex_end == roomSet["6Escalator"] && threeDActive) {
+		else if (!done && roomIndex_start == roomSet["6Escalator"] && threeDActive) {
 			current_floor = "5f"
 			reset();
 			loop();
 		}
-		displayPathTwoD();
+		if (wrongFloor) {
+			console.log("not useful")
+			noLoop();
+			return;
+		}
+		if (!isMinimap){
+			displayPathTwoD();
+		}
+		
 	}
+	
 }
 
 // zoomin and out 

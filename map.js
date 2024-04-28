@@ -63,7 +63,7 @@ function init() {
 
     const loader = new GLTFLoader().setPath('map/');
 
-    loader.load('56_13.0.gltf', function (gltf) { // load the 3D map to the scene
+    loader.load('56_16.0.gltf', function (gltf) { // load the 3D map to the scene
         const mesh = gltf.scene; // the object of the map
         mesh.position.set(0, -0.5, 0); // set position of the map
         scene.add(mesh); // add the map to the scene 
@@ -86,7 +86,7 @@ function init() {
 // Controller 
 function PLControls() {
     controllerCamera.position.set(30, 15, 36); // set position of the camera 
-    controls.getObject().lookAt(26, 9, 36); // look at the maps
+    controls.getObject().lookAt(27, -0.4, 56); // look at the maps
     scene.add(controllerCamera);
 
     threeDContainer.addEventListener('click', () => { controls.lock(); }, false); // click to lick the mouse in the scene
@@ -183,31 +183,37 @@ function check() {
         if (controls.getObject().position.y < -9) {
             velocity.y = 0;
             controls.getObject().position.set(30, 15, 36);
+            controls.getObject().lookAt(27, -0.4, 56); // look at the maps
             canJump = true;
         }
         if (controls.getObject().position.x < 1) {
             velocity.x = 0;
             controls.getObject().position.set(30, 15, 36);
+            controls.getObject().lookAt(27, -0.4, 56); // look at the maps
             canJump = true;
         }
         if (controls.getObject().position.z < 1) {
             velocity.z = 0;
             controls.getObject().position.set(30, 15, 36);
+            controls.getObject().lookAt(27, -0.4, 56); // look at the maps
             canJump = true;
         }
         if (controls.getObject().position.x > 55.8) {
             velocity.x = 0;
             controls.getObject().position.set(30, 15, 36);
+            controls.getObject().lookAt(27, -0.4, 56); // look at the maps
             canJump = true;
         }
         if (controls.getObject().position.z > 89) {
             velocity.z = 0;
             controls.getObject().position.set(30, 15, 36);
+            controls.getObject().lookAt(27, -0.4, 56); // look at the maps
             canJump = true;
         }
         if (controls.getObject().position.y > 18) {
             velocity.y = 0;
             controls.getObject().position.set(30, 15, 36);
+            controls.getObject().lookAt(27, -0.4, 56); // look at the maps
             canJump = true;
         }
     }
@@ -260,13 +266,19 @@ displaythreeDpath = function () {
     var EY = 5.4;
     var EX = 23;
     var Eshpere;
-    if (done && reset1) {
+    console.log(done)
+    if (done) {
         for (var i = 0; i < threeDPath.length; i++) {
             scene.remove(threeDPath[i]);
         }
         done = false
+        threeDPath = []
+        console.log("removed 3dpath")
+        
     }
-
+    console.log(current_floor)
+    console.log(roomIndex_start)
+    console.log(roomIndex_end)
     if (!sameFloor) {
         for (var Z = 38; Z < 53; Z++) {
 
@@ -302,38 +314,67 @@ displaythreeDpath = function () {
         PYcod = 5.2;
         Ycod = 5.2;
     }
-    if (roomIndex_start == roomSet["5Escalator"]) {
+    else if (current_floor[0] == "5"){
+        PYcod = -0.4;
         Ycod = -0.4;
     }
-    else if (roomIndex_start == roomSet["6Escalator"]) {
+    else if (current_floor[0] == "6"){
+        PYcod = 5.2;
+        Ycod = 5.2;
+    }
+    if (roomIndex_start == roomSet["5Escalator"] || roomIndex_end == roomSet["5Escalator"]) {
+        Ycod = -0.4;
+    }
+    else if (roomIndex_start == roomSet["6Escalator"] || roomIndex_end == roomSet["6Escalator"]) {
         Ycod = 5.2;
     }
     if (reset1) {
         camera.position.set(roomSet[roomNum_Start][0], PYcod + 1, roomSet[roomNum_Start][1]);
-        controls.getObject().lookAt(0, Ycod + 1, 0);
+        if (roomNum_Start[0] == "5"){
+            if (roomNum_End[0] == "5"){
+                controls.getObject().lookAt(30, Ycod + 1, 36);
+            }
+            else if (roomNum_End[0] == "6"){
+                controls.getObject().lookAt(roomSet["6Escalator"][0], Ycod-5, roomSet["6Escalator"][1]);
+            }
+        }
+        else if (roomNum_Start[0] == "6"){
+            if (roomNum_End[0] == "6"){
+                controls.getObject().lookAt(30, Ycod + 1, 36);
+            }
+            else if (roomNum_End[0] == "5"){
+                controls.getObject().lookAt(roomSet["6Escalator"][0], Ycod-5, roomSet["6Escalator"][1]);
+            }
+        }
+
         reset1 = false;
     }
 
-    for (var i = path.length - 1; i >= 0; i--) {
-        Xcod = path[i].x;
-        Zcod = path[i].y;
+    for (var i = test.length - 1; i >= 0; i--) {
+        Xcod = test[i].x;
+        Zcod = test[i].y;
 
         if (i == 0 && (sameFloor || roomIndex_start == roomSet["5Escalator"] || roomIndex_start == roomSet["6Escalator"])) { // end point 
+
             material = Rmaterial;
             obj = new THREE.Mesh(Triangle, material);
             scene.add(obj);
             obj.rotateX(Math.PI);
             obj.position.set(Xcod, Ycod + 2.5, Zcod);
             threeDPath.push(obj);
+            
             done = true;
+            
         }
-        else if (i == path.length - 1 && (sameFloor || roomIndex_end == roomSet["5Escalator"] || roomIndex_end == roomSet["6Escalator"])) { // start point
+        else if (i == test.length - 1 && (sameFloor || roomIndex_end == roomSet["5Escalator"] || roomIndex_end == roomSet["6Escalator"])) { // start point
+
             material = Gmaterial;
             obj = new THREE.Mesh(Triangle, material);
             scene.add(obj);
             obj.rotateX(Math.PI);
             obj.position.set(Xcod, Ycod + 2.5, Zcod);
             threeDPath.push(obj);
+
         }
         else {
             material = Bmaterial;
@@ -348,36 +389,6 @@ displaythreeDpath = function () {
 }
 
 var ptArray = [];
-
-/*function switch56() {
-    var cameraX = camera.position.x;
-    var cameraZ = camera.position.z;
-    var cameraY = camera.position.y;
-    var tempMap = current_image;
-    if (isMinimap == true){
-        stroke('black');
-        strokeWeight(4);
-        rmPt();
-        ptArray.push({x:cameraX * w * (275/1000), z:cameraZ * h * (495/1800)});
-        for (var i = 0; i == ptArray.length; i++) {
-            ellipse(ptArray[i].x, ptArray[i].z, 5, 5);
-        }
-        if (cameraY >= 5.2) {
-            current_image = img6f;
-            current_floor = "6f"
-        } else if (cameraY < 5.2) {
-            current_image = img5f;
-            current_floor = "5f"
-        }
-    } 
-
-    if (tempMap != current_image){
-        reset();
-        loop();
-        tempMap = current_image;
-    }
-    setTimeout(switch56, 1000);
-}*/
 
 switch56();
 
@@ -406,19 +417,15 @@ function switch56() {
         endShape();
 
         stroke('black');
-        strokeWeight(4);
-        point(cameraX * o * (275 / 1000), cameraZ * k * (495 / 1800));
+        fill('orange')
+        strokeWeight(1);
+        ellipse(cameraX * o * (275 / 1000), cameraZ * k * (495 / 1800), 5, 5);
 
 
         if(testb){
-            if(roomNum_End[0] != roomNum_Start[0]){
-                end.show_node('green', 0, 0);
-                start.show_node('red', 0, 0);
-            }else{
-                start.show_node('green', 0, 0);
-		        end.show_node('red', 0, 0);
-            }
-            
+
+            start.show_node('green', 0, 0);
+            end.show_node('red', 0, 0);
         }
         
         if (cameraY >= 5.2) {
@@ -434,6 +441,7 @@ function switch56() {
         reset();
         loop();
         mini_current_image = current_image;
+
     }
     setTimeout(switch56, 100);
 }
