@@ -24,7 +24,7 @@ A web-based 3D navigation system for buildings. This interactive application pro
 - **Multi-Floor Navigation**: Seamless navigation between floors with automatic escalator/elevator routing
 - **Minimap**: Toggle between full map view and minimap for quick reference
 - **Real-time Path Display**: Visual path rendering in both 2D and 3D environments
-![Alt Text](https://github.com/xAnyax/3D-Navigation-Map/raw/main/pics/3dpath.PNG)
+![Alt Text](https://github.com/xAnyax/3D-Navigation-Map/raw/main/pics/3dpath1.PNG)
 ![Alt Text](https://github.com/xAnyax/3D-Navigation-Map/raw/main/pics/3dpath2.PNG)
 
 
