@@ -2,19 +2,32 @@
 
 A web-based 3D navigation system for buildings. This interactive application provides both 2D and 3D visualization for indoor navigation, allowing users to search for optimal paths between rooms and facilities across multiple floors.
 
-![3D Navigation Map](https://img.shields.io/badge/License-MIT-blue.svg)
 ![Technologies](https://img.shields.io/badge/Built%20With-Three.js%20%7C%20p5.js-brightgreen)
+
 
 ## 🌟 Features
 
-- **3D Visualization**: Interactive 3D model of building floors with pointer lock controls for immersive navigation
 - **2D Map View**: Traditional 2D floor plan with path visualization
+![Alt Text](https://github.com/xAnyax/3D-Navigation-Map/raw/main/pics/mainpage.PNG)
 - **A\* Pathfinding**: Intelligent pathfinding algorithm with diagonal movement support
-- **Multi-Floor Navigation**: Seamless navigation between floors with automatic escalator/elevator routing
 - **Room Search**: Easy-to-use search interface for rooms and facilities (501-610, toilets, elevators, etc.)
-- **Minimap**: Toggle between full map view and minimap for quick reference
+![Alt Text](https://github.com/xAnyax/3D-Navigation-Map/raw/main/pics/searchpath.PNG)
+![Alt Text](https://github.com/xAnyax/3D-Navigation-Map/raw/main/pics/searchpath2.PNG)
 - **Zoom & Pan**: Flexible map controls with zoom in/out and drag-to-pan functionality
+![Alt Text](https://github.com/xAnyax/3D-Navigation-Map/raw/main/pics/enlargemap.PNG)
+
+- **Indicator**: Indicate error and reminder
+![Alt Text](https://github.com/xAnyax/3D-Navigation-Map/raw/main/pics/infoindicator.PNG)
+![Alt Text](https://github.com/xAnyax/3D-Navigation-Map/raw/main/pics/errorindicator.PNG)
+
+- **3D Visualization**: Interactive 3D model of building floors with pointer lock controls for immersive navigation
+- **Multi-Floor Navigation**: Seamless navigation between floors with automatic escalator/elevator routing
+- **Minimap**: Toggle between full map view and minimap for quick reference
 - **Real-time Path Display**: Visual path rendering in both 2D and 3D environments
+![Alt Text](https://github.com/xAnyax/3D-Navigation-Map/raw/main/pics/3dpath.PNG)
+![Alt Text](https://github.com/xAnyax/3D-Navigation-Map/raw/main/pics/3dpath2.PNG)
+
+
 
 ## 🛠️ Technologies Used
 
