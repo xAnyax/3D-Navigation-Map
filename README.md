@@ -7,7 +7,7 @@ A web-based 3D navigation system for buildings. This interactive application pro
 
 ## 🌟 Features
 
-- **2D Map View**: Traditional 2D floor plan with path visualization
+- **###2D Map View**: Traditional 2D floor plan with path visualization
 ![Alt Text](https://github.com/xAnyax/3D-Navigation-Map/raw/main/pics/mainpage.PNG)
 - **A\* Pathfinding**: Intelligent pathfinding algorithm with diagonal movement support
 - **Room Search**: Easy-to-use search interface for rooms and facilities (501-610, toilets, elevators, etc.)
